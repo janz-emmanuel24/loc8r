@@ -1,0 +1,5 @@
+{
+ "workbench.tree.indent": 6,
+ "prettier.vueIndentScriptAndStyle": true,
+ "vetur.format.options.useTabs": true
+}

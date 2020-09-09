@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
-let dbURL = 'mongodb://localhost/Loc8r';
+let dbURL = 'mongodb://localhost/Loc8r'; //local connection
 if (process.env.NODE_ENV === 'production') {
-    dbURL = `${process.env.MONGODB_URL}`;
+    dbURL = `${process.env.MONGODB_URL}`; //online connection
 }
 mongoose.connect(dbURL, {
     useNewUrlParser: true,

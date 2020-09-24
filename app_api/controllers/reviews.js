@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const Loc = mongoose.model('Location');
+const mongoose = require('mongoose'); //database connection
+const Loc = mongoose.model('Location'); //model for the controller to interact
 
 const doSetAverageRating = (location) => {
     if (location.reviews && location.reviews.length > 0) {
@@ -132,7 +132,7 @@ const reviewsReadOne = (req, res) => {
         });
 };
 const reviewsUpdateOne = (req, res) => {
-    if (!req.params.locationid || req.params.reviewid) {
+    if (!req.params.locationid || !req.params.reviewid) {
         return res
             .status(404)
             .json({

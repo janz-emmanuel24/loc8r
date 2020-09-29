@@ -78,11 +78,11 @@ const locationsListByDistance = async(req, res) => {
                 distance: `${result.distance.calculated.toFixed()}`
             }
         });
+        console.log(locations);
         return res
             .status(200)
             .json(locations)
     } catch (err) {
-        console.log(err);
         res
             .status(404)
             .json(err);

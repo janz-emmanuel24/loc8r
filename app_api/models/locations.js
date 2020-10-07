@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
-/* OpeningTime subdocument */
-const openingTimeSchema = new mongoose.Schema({
+const openingTimesSchema = new mongoose.Schema({
     days: {
         type: String,
         required: true
@@ -13,27 +12,22 @@ const openingTimeSchema = new mongoose.Schema({
         required: true
     }
 });
-/* review subdocument */
+
 const reviewSchema = new mongoose.Schema({
-    author: {
-        type: String,
-        required: true
-    },
+    author: String,
     rating: {
         type: Number,
         required: true,
         min: 0,
         max: 5
     },
-    reviewText: {
-        type: String,
-        required: true
-    },
+    reviewText: String,
     createdOn: {
         type: Date,
         'default': Date.now
     }
-})
+});
+
 const locationSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -53,10 +47,11 @@ const locationSchema = new mongoose.Schema({
         },
         coordinates: [Number]
     },
-    openingTimes: [openingTimeSchema],
+    openingTimes: [openingTimesSchema],
     reviews: [reviewSchema]
 });
 locationSchema.index({
     coords: '2dsphere'
 });
+
 mongoose.model('Location', locationSchema);

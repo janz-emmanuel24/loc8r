@@ -44,5 +44,6 @@ process.on('SIGTERM', () => {
     });
 });
 
-/* Bringing locationModel into the application */
+/* BRINGING IN THE SCHEMAS AND MODELS */
 require('./locations');
+require('./users');

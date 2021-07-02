@@ -1,5 +1,6 @@
 const mongoose = require('mongoose'); //database connection
 const Loc = mongoose.model('Location'); //model for the controller to interact
+const User = mongoose.model('User');
 
 const doSetAverageRating = (location) => {
     if (location.reviews && location.reviews.length > 0) {
@@ -29,7 +30,7 @@ const updateAverageRating = (locationId) => {
             }
         });
 };
-const doAddReview = (req, res, location) => {
+const doAddReview = (req, res, location, author) => {
     if (!location) {
         res
             .status(404)
@@ -38,7 +39,6 @@ const doAddReview = (req, res, location) => {
             });
     } else {
         const {
-            author,
             rating,
             reviewText
         } = req.body;
@@ -64,26 +64,57 @@ const doAddReview = (req, res, location) => {
     }
 };
 const reviewsCreate = (req, res) => {
-    const locationId = req.params.locationid;
-    if (locationId) {
-        Loc
-            .findById(locationId)
-            .select('reviews')
-            .exec((err, location) => {
-                if (err) {
-                    res
-                        .status(400)
+    getAuthor(req, res, (req, res, userName) => {
+        const locationId = req.params.locationid;
+        if (locationId) {
+            Loc
+                .findById(locationId)
+                .select('reviews')
+                .exec((err, location) => {
+                    if (err) {
+                        res
+                            .status(400)
+                            .json(err)
+                    } else {
+                        doAddReview(req, res, location, userName);
+                    }
+                });
+        } else {
+            res
+                .status(404)
+                .json({
+                    "message": "Location not found."
+                });
+        }
+    });
+};
+const getAuthor = (req, res, callback) => {
+    if (req.payload && req.payload.email) {
+        User
+            .findOne({
+                email: req.payload.email
+            })
+            .exec((err, user) => {
+                if (!user) {
+                    return res
+                        .status(404)
+                        .json({
+                            "message": "User not found."
+                        });
+                } else if (err) {
+                    console.log(err);
+                    return res
+                        .status(404)
                         .json(err)
-                } else {
-                    doAddReview(req, res, location);
                 }
+                callback(req, res, user.name);
             });
     } else {
-        res
+        return res
             .status(404)
             .json({
-                "message": "Location not found."
-            });
+                "message": "User not found."
+            })
     }
 };
 const reviewsReadOne = (req, res) => {
